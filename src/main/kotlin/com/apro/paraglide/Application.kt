@@ -1,7 +1,9 @@
 package com.apro.paraglide
 
 import com.apro.paraglide.config.errorStatusPageConfig
-import com.apro.paraglide.config.requestValidationConfig
+import com.apro.paraglide.config.registerValidationConfig
+import com.apro.paraglide.database.DatabaseFactory
+import com.apro.paraglide.database.UserService
 import com.apro.paraglide.plugins.registerRouting
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -15,6 +17,11 @@ import org.slf4j.event.Level
 
 fun main() {
     embeddedServer(Netty, host = "127.0.0.1", port = 3001) {
+
+        DatabaseFactory.init()
+        val userService = UserService()
+
+
         install(CallLogging) {
             level = Level.DEBUG
         }
@@ -27,14 +34,10 @@ fun main() {
         }
 
         install(RequestValidation) {
-            requestValidationConfig()
+            registerValidationConfig(userService)
         }
 
-//        DatabaseFactory.init()
-
-//        val userService = UserService()
-
-        registerRouting()
+        registerRouting(userService)
 
     }.start(wait = true)
 }
