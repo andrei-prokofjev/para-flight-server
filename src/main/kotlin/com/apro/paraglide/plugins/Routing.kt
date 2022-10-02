@@ -16,8 +16,6 @@ fun Application.registerRouting(userService: UserService) {
         get("/") { call.respondText("OK!") }
 
         post("/api/v1/register") {
-
-            println(">>> total users: " + userService.getAllUsers().size)
             val request = call.receive<RegisterRequest>()
             userService.insertUser(request.userName)
             call.respond(HttpStatusCode.OK, RegisterResponse(UUID.randomUUID().toString()))

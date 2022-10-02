@@ -14,6 +14,7 @@ fun RequestValidationConfig.registerValidationConfig(userService: UserService) {
                 userName.length > 20 -> throw BadRequestException("too long name")
                 userService.getAllUsers()
                     .count { it.name == request.userName } != 0 -> throw BadRequestException("name already exists")
+
                 else -> ValidationResult.Valid
             }
         }
